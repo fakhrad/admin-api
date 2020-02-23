@@ -49,4 +49,5 @@ router.delete("/remove", auth.verifyToken, clientController.removeclient);
 
 router.put("/update", auth.verifyToken, clientController.updateclient);
 router.get("/info", auth.verifyToken, clientController.getbyid);
+router.get("/count", auth.verifyToken, clientController.count);
 module.exports = router;

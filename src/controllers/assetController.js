@@ -228,3 +228,44 @@ exports.count = function (req, res, next) {
             }
         });
 };
+
+exports.assetsbytype = function (req, res, next) {
+    broker
+        .sendRPCMessage({
+                spaceId: req.spaceid,
+                userId: req.userId,
+                body: req.query
+            },
+            "assetsbytype"
+        )
+        .then(result => {
+            var obj = JSON.parse(result.toString("utf8"));
+            if (!obj.success) {
+                if (obj.error) return res.status(500).json(obj);
+                else {
+                    res.status(404).json(obj);
+                }
+            } else {
+                res.status(200).json(obj.data);
+            }
+        });
+};
+
+exports.getrecentitems = function (req, res, next) {
+    broker.sendRPCMessage({
+        spaceId: req.spaceid,
+        userId: req.userId,
+        body: req.query
+    }, 'getrecentassets').then((result) => {
+        var obj = JSON.parse(result.toString('utf8'));
+        if (!obj.success) {
+            if (obj.error)
+                return res.status(500).json(obj);
+            else {
+                res.status(404).json(obj);
+            }
+        } else {
+            res.status(200).json(obj.data);
+        }
+    });
+}

@@ -22,4 +22,6 @@ router.put("/archive", auth.verifyToken, controller.archive);
 router.put("/unarchive", auth.verifyToken, controller.unArchive);
 router.get("/count", auth.verifyToken, controller.count);
 router.get("/contentsbystatus", auth.verifyToken, controller.contentsbystatus);
+router.get("/recentitems", auth.verifyToken, controller.getrecentitems);
+router.get("/dailyinputs", auth.verifyToken, controller.getdailyinputs);
 module.exports = router;

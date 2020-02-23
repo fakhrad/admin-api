@@ -113,7 +113,7 @@ exports.count = function (req, res, next) {
                 userId: req.userId,
                 body: req.query
             },
-            "getclientscount"
+            "getappscount"
         )
         .then(result => {
             var obj = JSON.parse(result.toString("utf8"));

@@ -346,3 +346,41 @@ exports.contentsbystatus = function (req, res, next) {
       }
     });
 };
+
+exports.getrecentitems = function (req, res, next) {
+  broker.sendRPCMessage({
+    spaceId: req.spaceid,
+    userId: req.userId,
+    body: req.query
+  }, 'getrecentcontents').then((result) => {
+    var obj = JSON.parse(result.toString('utf8'));
+    if (!obj.success) {
+      if (obj.error)
+        return res.status(500).json(obj);
+      else {
+        res.status(404).json(obj);
+      }
+    } else {
+      res.status(200).json(obj.data);
+    }
+  });
+}
+
+exports.getdailyinputs = function (req, res, next) {
+  broker.sendRPCMessage({
+    spaceId: req.spaceid,
+    userId: req.userId,
+    body: req.query
+  }, 'getcontentsdailyinputs').then((result) => {
+    var obj = JSON.parse(result.toString('utf8'));
+    if (!obj.success) {
+      if (obj.error)
+        return res.status(500).json(obj);
+      else {
+        res.status(404).json(obj);
+      }
+    } else {
+      res.status(200).json(obj.data);
+    }
+  });
+}
