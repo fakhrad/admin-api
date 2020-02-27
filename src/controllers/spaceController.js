@@ -1,4 +1,5 @@
 var jwt = require("jsonwebtoken");
+var async = require('async')
 const config = require("../config");
 const {
   body,
@@ -8,7 +9,6 @@ const {
   sanitizeBody
 } = require("express-validator/filter");
 const broker = require("./serviceBroker");
-exports.stats = function (req, res, next) {};
 
 exports.setlocales = function (req, res, next) {
   broker
@@ -111,4 +111,57 @@ exports.limits = function (req, res, next) {
         res.status(200).json(obj.data);
       }
     });
+};
+
+exports.stats = function (req, res, next) {
+  async.parallel({
+    contents: function (callback) {
+      broker
+        .sendRPCMessage({
+            spaceId: req.spaceid,
+            userId: req.userId,
+            body: {
+              id: req.query.id
+            }
+          },
+          "getstats"
+        )
+        .then(result => {
+          var obj = JSON.parse(result.toString("utf8"));
+          callback(undefined, obj);
+        });
+    },
+    apps: function (callback) {
+      broker
+        .sendRPCMessage({
+            spaceId: req.spaceid,
+            userId: req.userId,
+            body: {
+              id: req.query.id
+            }
+          },
+          "getappscount"
+        )
+        .then(result => {
+          var obj = JSON.parse(result.toString("utf8"));
+          if (!obj.success) {
+            if (obj.error) callback(obj, undefined);
+            else {
+              callback(obj, undefined);
+            }
+          } else {
+            callback(undefined, obj.data);
+          }
+        });
+    }
+  }, (err, results) => {
+    if (err && err.length > 0) {
+      res.status(500).send(err);
+    } else {
+      var contents = results.contents;
+      contents.apps = results.apps;
+      res.status(200).send(contents);
+    }
+  });
+
 };
