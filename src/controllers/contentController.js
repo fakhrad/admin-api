@@ -259,11 +259,7 @@ exports.filter = function (req, res, next) {
     .sendRPCMessage({
         spaceId: req.spaceid,
         userId: req.userId,
-        body: {
-          name: req.query.name,
-          contentType: req.query.contentType,
-          status: req.query.status
-        }
+        query: req.query
       },
       "filtercontents"
     )

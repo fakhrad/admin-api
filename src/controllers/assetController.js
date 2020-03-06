@@ -189,10 +189,7 @@ exports.filter = function (req, res, next) {
     broker.sendRPCMessage({
         spaceId: req.spaceid,
         userId: req.userId,
-        body: {
-            fileType: req.query.fileType,
-            status: req.query.status
-        }
+        query: req.query
     }, 'filterassets').then((result) => {
         var obj = JSON.parse(result.toString('utf8'));
         if (!obj.success) {
