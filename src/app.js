@@ -1,15 +1,19 @@
 var express = require('express');
 var cors = require('cors')
-var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var helmet = require('helmet');
 var compression = require('compression');
 // var db = require('./db/init-db')
 var router = express.Router()
-
+let apiLogger = require("./middlewares/apiLogger");
 
 var app = express();
+
+// Overwrite res.send
+app.use(apiLogger);
+// a middleware function with no mount path. This code is executed for every request to the router
+
 
 app.use(compression()); //Compress all routes
 app.use(helmet());
@@ -24,7 +28,6 @@ var spaces = require('./routes/spaces');
 
 // a middleware function with no mount path. This code is executed for every request to the router
 
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false

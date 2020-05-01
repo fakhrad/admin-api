@@ -14,7 +14,8 @@ exports.getAll = function (req, res, next) {
     .sendRPCMessage({
         spaceId: req.spaceid,
         userId: req.userId,
-        body: req.body
+        body: req.body,
+        query: req.query
       },
       "getcontents"
     )
@@ -122,6 +123,27 @@ exports.update = function (req, res, next) {
     });
 };
 
+exports.updateandpublish = function (req, res, next) {
+  broker
+    .sendRPCMessage({
+        spaceId: req.spaceid,
+        userId: req.userId,
+        body: req.body
+      },
+      "partialupdatecontent"
+    )
+    .then(result => {
+      var obj = JSON.parse(result.toString("utf8"));
+      if (!obj.success) {
+        if (obj.error) return res.status(500).json(obj);
+        else {
+          res.status(404).json(obj);
+        }
+      } else {
+        res.status(200).json(obj.data);
+      }
+    });
+};
 exports.remove = function (req, res, next) {
   broker
     .sendRPCMessage({
@@ -299,12 +321,36 @@ exports.query = function (req, res, next) {
     });
 };
 
+exports.filterbyrels = function (req, res, next) {
+  console.log(req.query);
+  broker
+    .sendRPCMessage({
+        spaceId: req.spaceid,
+        userId: req.userId,
+        query: req.query
+      },
+      "getcontentswithrelations"
+    )
+    .then(result => {
+      var obj = JSON.parse(result.toString("utf8"));
+      if (!obj.success) {
+        if (obj.error) return res.status(500).json(obj);
+        else {
+          res.status(404).json(obj);
+        }
+      } else {
+        res.status(200).json(obj.data);
+      }
+    });
+};
+
 exports.count = function (req, res, next) {
   broker
     .sendRPCMessage({
         spaceId: req.spaceid,
         userId: req.userId,
-        body: req.query
+        query: req.query,
+        body: req.body
       },
       "getcontentscount"
     )
@@ -326,7 +372,8 @@ exports.contentsbystatus = function (req, res, next) {
     .sendRPCMessage({
         spaceId: req.spaceid,
         userId: req.userId,
-        body: req.query
+        query: req.query,
+        body: req.body
       },
       "contentsbystatus"
     )
@@ -347,7 +394,8 @@ exports.getrecentitems = function (req, res, next) {
   broker.sendRPCMessage({
     spaceId: req.spaceid,
     userId: req.userId,
-    body: req.query
+    query: req.query,
+    body: req.body
   }, 'getrecentcontents').then((result) => {
     var obj = JSON.parse(result.toString('utf8'));
     if (!obj.success) {
@@ -366,7 +414,8 @@ exports.getdailyinputs = function (req, res, next) {
   broker.sendRPCMessage({
     spaceId: req.spaceid,
     userId: req.userId,
-    body: req.query
+    query: req.query,
+    body: req.body
   }, 'getcontentsdailyinputs').then((result) => {
     var obj = JSON.parse(result.toString('utf8'));
     if (!obj.success) {
