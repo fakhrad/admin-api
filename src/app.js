@@ -11,7 +11,7 @@ let apiLogger = require("./middlewares/apiLogger");
 var app = express();
 
 // Overwrite res.send
-app.use(apiLogger);
+//app.use(apiLogger);
 // a middleware function with no mount path. This code is executed for every request to the router
 
 
