@@ -6,7 +6,7 @@ var helmet = require('helmet');
 var compression = require('compression');
 // var db = require('./db/init-db')
 var router = express.Router()
-let apiLogger = require("./middlewares/apiLogger");
+//let apiLogger = require("./middlewares/apiLogger");
 
 var app = express();
 

@@ -12,20 +12,20 @@ const broker = require("./serviceBroker");
 exports.login = [
   //Validate fields
   body("username", "UserName must not be empty")
-  .isEmail()
-  .withMessage("Invalid email"),
+    .isEmail()
+    .withMessage("Invalid email"),
   body("password", "Password must not be empty")
-  .isLength({
-    min: 8
-  })
-  .withMessage("Password length must be at least 8 charachters"),
+    .isLength({
+      min: 8
+    })
+    .withMessage("Password length must be at least 8 charachters"),
   //Sanitize fields
   sanitizeBody("username")
-  .trim()
-  .escape(),
+    .trim()
+    .escape(),
   sanitizeBody("password")
-  .trim()
-  .escape(),
+    .trim()
+    .escape(),
   (req, res, next) => {
     console.log(req.body);
     var errors = validationResult(req);
@@ -67,15 +67,15 @@ var sendRegisterEmail = function (email, userinfo) {
 
   broker
     .sendRPCMessage({
-        body: {
-          message: {
-            to: email,
-            from: "info@reqter.com",
-            subject: "Welcome to Reqter",
-            text: "Dear Customer,\n\rPlease click on the link below to confirm your email\r\nhttps://admin.reqter.com/verify/" + userinfo.access_token
-          }
+      body: {
+        message: {
+          to: email,
+          from: "info@reqter.com",
+          subject: "Welcome to Reqter",
+          text: "Dear Customer,\n\rPlease click on the link below to confirm your email\r\nhttps://admin.reqter.com/verify/" + userinfo.access_token
         }
-      },
+      }
+    },
       "sendEmailMessage"
     )
     .then(result => {
@@ -95,20 +95,20 @@ var sendRegisterEmail = function (email, userinfo) {
 exports.register = [
   //Validate fields
   body("username", "UserName must not be empty")
-  .isEmail()
-  .withMessage("Invalid email"),
+    .isEmail()
+    .withMessage("Invalid email"),
   body("password", "Password must not be empty")
-  .isLength({
-    min: 8
-  })
-  .withMessage("Password length must be at least 8 charachters"),
+    .isLength({
+      min: 8
+    })
+    .withMessage("Password length must be at least 8 charachters"),
   //Sanitize fields
   sanitizeBody("username")
-  .trim()
-  .escape(),
+    .trim()
+    .escape(),
   sanitizeBody("password")
-  .trim()
-  .escape(),
+    .trim()
+    .escape(),
   (req, res, next) => {
     console.log(req.body);
     var errors = validationResult(req);
@@ -158,21 +158,21 @@ exports.register = [
 exports.add = [
   //Validate fields
   body("username", "UserName must not be empty")
-  .isEmail()
-  .withMessage("Invalid email"),
+    .isEmail()
+    .withMessage("Invalid email"),
   body("password", "Password must not be empty")
-  .isLength({
-    min: 8
-  })
-  .withMessage("Password length must be at least 8 charachters"),
+    .isLength({
+      min: 8
+    })
+    .withMessage("Password length must be at least 8 charachters"),
   body("role", "Role not assigned"),
   //Sanitize fields
   sanitizeBody("username")
-  .trim()
-  .escape(),
+    .trim()
+    .escape(),
   sanitizeBody("password")
-  .trim()
-  .escape(),
+    .trim()
+    .escape(),
   (req, res, next) => {
     console.log(req.body);
     var errors = validationResult(req);
@@ -190,10 +190,10 @@ exports.add = [
       console.log(req.body);
       broker
         .sendRPCMessage({
-            spaceId: req.spaceid,
-            userId: req.userId,
-            body: req.body
-          },
+          spaceId: req.spaceid,
+          userId: req.userId,
+          body: req.body
+        },
           "adminadduser"
         )
         .then(result => {
@@ -293,10 +293,10 @@ exports.updateprofile = [
     } else {
       broker
         .sendRPCMessage({
-            spaceId: req.body.spaceId,
-            userId: req.userId,
-            body: req.body
-          },
+          spaceId: req.body.spaceId,
+          userId: req.userId,
+          body: req.body
+        },
           "adminupdateprofile"
         )
         .then(result => {
@@ -328,10 +328,10 @@ exports.deleteAccount = [
       req.body.id = req.userId;
       broker
         .sendRPCMessage({
-            spaceId: req.body.spaceId,
-            userId: req.userId,
-            body: req.body
-          },
+          spaceId: req.body.spaceId,
+          userId: req.userId,
+          body: req.body
+        },
           "admindeleteaccount"
         )
         .then(result => {
@@ -421,15 +421,15 @@ var sendVerifyCode = function (email, code) {
 
   broker
     .sendRPCMessage({
-        body: {
-          message: {
-            to: email,
-            from: "info@reqter.com",
-            subject: "Reqter activation code",
-            text: "Dear Customer,\n\rYour activation code is : " + code.toString()
-          }
+      body: {
+        message: {
+          to: email,
+          from: "info@reqter.com",
+          subject: "Reqter activation code",
+          text: "Dear Customer,\n\rYour activation code is : " + code.toString()
         }
-      },
+      }
+    },
       "sendEmailMessage"
     )
     .then(result => {
@@ -459,6 +459,9 @@ exports.forgotpassword = [
     } else {
       user = req.body.username;
       console.log(user);
+      res.status(200).json({
+        success: true
+      });
       broker
         .sendRPCMessage({
           body: req.body
@@ -472,9 +475,6 @@ exports.forgotpassword = [
           } else {
             //Send mail here
             sendVerifyCode(user, obj.data.code)
-            res.status(200).json({
-              success: true
-            });
           }
         });
     }
@@ -547,11 +547,11 @@ exports.resetpassword = [
     } else {
       broker
         .sendRPCMessage({
-            body: {
-              id: req.userId,
-              newpassword: req.body.newpassword
-            }
-          },
+          body: {
+            id: req.userId,
+            newpassword: req.body.newpassword
+          }
+        },
           "adminresetpassword"
         )
         .then(result => {
